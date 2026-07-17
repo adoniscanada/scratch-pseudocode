@@ -1,0 +1,42 @@
+{
+  "name": "scratch-pseudocode",
+  "version": "1.0.0",
+  "description": "A utility for generating pseudocode from public Scratch projects.",
+  "keywords": [
+    "scratch",
+    "scratch-mit",
+    "pseudocode",
+    "parser",
+    "sb3"
+  ],
+  "homepage": "https://github.com/adoniscanada/scratch-pseudocode#readme",
+  "bugs": {
+    "url": "https://github.com/adoniscanada/scratch-pseudocode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adoniscanada/scratch-pseudocode.git"
+  },
+  "license": "MIT",
+  "author": "Adonis Canada",
+  "type": "module",
+  "bin": {
+    "scratch-pseudocode": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup src/cli.ts --format esm --dts --clean",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}
