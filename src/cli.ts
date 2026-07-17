@@ -14,6 +14,22 @@ import type {
 const VALUE_TRUNCATE = 50;
 const LIST_TRUNCATE = 30;
 
+const USAGE = "Usage: scratch-pseudocode [-t <name>]... <url>";
+
+const HELP = `Generate pseudocode from public Scratch projects.
+
+${USAGE}
+
+Arguments:
+  url                  A Scratch project URL containing a numeric project ID,
+                       e.g. https://scratch.mit.edu/projects/60917032
+                       The project must be public and shared.
+
+Options:
+  -t, --target <name>  Only output the named target.
+                       Repeat the flag to include several.
+  -h, --help           Show this help.`;
+
 const operatorCodes: Record<string, string> = {
   operator_add: "%s + %s",
   operator_subtract: "%s - %s",
@@ -35,35 +51,52 @@ const operatorCodes: Record<string, string> = {
   operator_contains: "%s contains %s",
 };
 
-const { values, positionals } = parseArgs({
-  options: {
-    target: {
-      type: "string",
-      short: "t",
-      multiple: true,
+let values: { target?: string[]; help?: boolean };
+let positionals: string[];
+
+try {
+  ({ values, positionals } = parseArgs({
+    options: {
+      target: {
+        type: "string",
+        short: "t",
+        multiple: true,
+      },
+      help: {
+        type: "boolean",
+        short: "h",
+      },
     },
-  },
-  allowPositionals: true,
-});
+    allowPositionals: true,
+  }));
+} catch (err) {
+  console.error(USAGE);
+  process.exit(1);
+}
+
+if (values.help) {
+  console.log(HELP);
+  process.exit(0);
+}
 
 const input = positionals[0];
 
 if (!input) {
-  console.error("Usage: scratch-pseudocode [-t <name>]... <url>");
+  console.error(USAGE);
   process.exit(1);
 }
 
 const match = input.trim().match(/scratch\.mit\.edu\/projects\/(\d+)/);
 
 if (!match) {
-  console.error("Usage: scratch-pseudocode [-t <name>]... <url>");
+  console.error(USAGE);
   process.exit(1);
 }
 
 const projectId = match[1];
 
 if (!projectId) {
-  console.error("Usage: scratch-pseudocode [-t <name>]... <url>");
+  console.error(USAGE);
   process.exit(1);
 }
 
