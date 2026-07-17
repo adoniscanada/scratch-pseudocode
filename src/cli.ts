@@ -102,7 +102,7 @@ if (!projectId) {
 
 async function fetchProject(projectId: string) {
   const metaRes = await fetch(
-    `https://api.scratch.mit.edu/projects/${projectId}`
+    `https://api.scratch.mit.edu/projects/${projectId}`,
   );
   const projectMeta = await metaRes.json();
 
@@ -110,8 +110,8 @@ async function fetchProject(projectId: string) {
 
   const projectRes = await fetch(
     `https://projects.scratch.mit.edu/${projectId}?token=${encodeURIComponent(
-      token
-    )}`
+      token,
+    )}`,
   );
 
   const project: ScratchProject = await projectRes.json();
@@ -128,7 +128,7 @@ function formatValue(value: string | number | boolean, len: number): string {
 function formatList(
   items: (string | number | boolean)[],
   cap: number,
-  len: number
+  len: number,
 ): string {
   const fmt = items.map((i) => {
     return formatValue(i, len);
@@ -151,7 +151,7 @@ function parseOperator(operator: string, args: string[]): string {
 function collectBlocks(
   startId: string | null,
   blockMap: Record<string, Block>,
-  collected: Block[]
+  collected: Block[],
 ): void {
   let currentId: string | null = startId;
 
@@ -196,7 +196,7 @@ function formatInput(
   input: BlockInput,
   blocks: Record<string, Block>,
   variables: Record<string, ScratchVariable>,
-  lists: Record<string, ScratchList>
+  lists: Record<string, ScratchList>,
 ): string {
   if (typeof input[1] === "string") {
     const id = input[1];
@@ -205,7 +205,7 @@ function formatInput(
       (blocks[id].shadow || blocks[id]?.opcode.startsWith("argument"))
     ) {
       const values = Object.values(blocks[id].fields).map(
-        (field) => `${formatValue(field[0], VALUE_TRUNCATE)}`
+        (field) => `${formatValue(field[0], VALUE_TRUNCATE)}`,
       );
       return values.join(" ");
     }
@@ -246,7 +246,7 @@ function toLine(
   blocks: Record<string, Block>,
   id: string,
   variables: Record<string, ScratchVariable>,
-  lists: Record<string, ScratchList>
+  lists: Record<string, ScratchList>,
 ): string {
   if (!blocks[id]) return "";
 
@@ -307,7 +307,7 @@ function toLine(
               blocks[id].inputs[arg],
               blocks,
               variables,
-              lists
+              lists,
             );
           }
         })
@@ -315,7 +315,7 @@ function toLine(
 
       return `${blocks[id].opcode}(${parseProcedure(
         blocks[id].mutation.proccode,
-        args
+        args,
       )})`;
     }
 
@@ -328,7 +328,7 @@ function toLine(
 
         return `${blocks[id].opcode}(${parseProcedure(
           proc.mutation.proccode,
-          args
+          args,
         )})`;
       }
     }
@@ -378,7 +378,7 @@ function toPseudocode(project: ScratchProject, targets?: string[]): string {
         if (Object.values(target.lists).length > 0) {
           pseudocode += `Lists: [${Object.values(target.lists).map(
             ([name, items]) =>
-              `${name}=${formatList(items, LIST_TRUNCATE, VALUE_TRUNCATE)}`
+              `${name}=${formatList(items, LIST_TRUNCATE, VALUE_TRUNCATE)}`,
           )}]\n`;
         }
         // Costumes
@@ -386,7 +386,7 @@ function toPseudocode(project: ScratchProject, targets?: string[]): string {
           pseudocode += `Costumes: ${formatList(
             Object.values(target.costumes).map((costume) => costume.name),
             LIST_TRUNCATE,
-            VALUE_TRUNCATE
+            VALUE_TRUNCATE,
           )}\n`;
         }
         // Scripts
